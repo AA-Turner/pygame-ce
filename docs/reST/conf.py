@@ -213,10 +213,12 @@ latex_documents = [
 
 # Target directory for header files (default: current working directory).
 headers_dest = './_headers'
+headers_dest = 'src_c\\doc'
 
 # Whether or not to create target directory tree if it does not exist
 # (default: no directory creation).
 headers_mkdirs = True
+headers_mkdirs=0
 
 # Suffix to add for header file names before the '.h' extension
 # (default: no suffix).
