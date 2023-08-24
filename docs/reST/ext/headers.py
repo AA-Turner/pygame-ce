@@ -29,23 +29,18 @@ def writer(app, pagename, templatename, context, doctree):
         return
 
     env = app.builder.env
-    dirpath = os.path.abspath(app.config["headers_dest"])
-    if app.config["headers_mkdirs"] and not os.path.lexists(dirpath):
-        os.makedirs(dirpath)
-    filename_suffix = app.config["headers_filename_sfx"]
     items = []
     for section in isections(doctree):
         tour_descinfo(items.append, section, env)
     if not items:
         return
     templates = app.builder.templates
-    filename = f"{os.path.basename(pagename)}{filename_suffix}.h"
-    filepath = os.path.join(dirpath, filename)
-    template = app.config["headers_template"]
+    filename = f"{os.path.basename(pagename)}_doc.h"
+    filepath = os.path.join('src_c', 'doc', filename)
     header = open(filepath, "w", encoding="utf-8")
     context["hdr_items"] = items
     try:
-        header.write(templates.render(template, context))
+        header.write(templates.render('header.h', context))
     finally:
         header.close()
         del context["hdr_items"]

@@ -22,8 +22,11 @@ sys.path.append(os.path.abspath('.'))
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest',
-              'sphinx.ext.coverage', 'ext.headers', 'ext.boilerplate',
-              'ext.customversion', 'ext.edit_on_github']
+              'sphinx.ext.coverage',
+              'ext.headers',
+              'ext.boilerplate',
+              'ext.customversion',
+              'ext.edit_on_github']
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -210,19 +213,6 @@ latex_documents = [
 #latex_use_modindex = True
 
 #-- Options for C header output ------------------------------------------------
-
-# Target directory for header files (default: current working directory).
-headers_dest = './_headers'
-headers_dest = 'src_c\\doc'
-
-# Whether or not to create target directory tree if it does not exist
-# (default: no directory creation).
-headers_mkdirs = True
-headers_mkdirs=0
-
-# Suffix to add for header file names before the '.h' extension
-# (default: no suffix).
-headers_filename_sfx = '_doc'
 
 smartquotes = False
 
