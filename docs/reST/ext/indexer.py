@@ -47,7 +47,11 @@ def writer(app, pagename, _, context, doctree):
     items = []
     for section in doctree:
         if isinstance(section, docutils.nodes.section):
-            items.extend(tour_descinfo(section, app.builder.env))
+            refid = section["ids"][0]
+            descinfo = app.builder.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
+            items.append(descinfo)
+            for refid in descinfo["children"]:
+                items.append(app.builder.env.pyg_descinfo_tbl[refid])  # A KeyError would mean a bug.
     if not items:
         return
     print(pagename, len(items))
@@ -57,22 +61,6 @@ def writer(app, pagename, _, context, doctree):
             header.write(app.builder.templates.render('header.h', context))
     finally:
         del context["hdr_items"]
-
-
-def tour_descinfo(node, env):
-    if isinstance(node, docutils.nodes.section):
-        refid = node["ids"][0]
-    elif isinstance(node, sphinx.addnodes.desc):
-        refid = node[0]["ids"][0]
-    else:
-        raise TypeError(f"Unrecognized node type '{node.__class__}'")
-    try:
-        descinfo = env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
-    except KeyError:
-        return
-    yield descinfo
-    for refid in descinfo["children"]:
-        yield env.pyg_descinfo_tbl[refid]  # A KeyError would mean a bug.
 
 
 def collect_document_info(app, doctree):
