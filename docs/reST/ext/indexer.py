@@ -69,12 +69,6 @@ def writer(app, pagename, _, context, doctree):
 
 def prep_document_info(app, env, docname):
     try:
-        env.pyg_sections = [e for e in env.pyg_sections if e["docname"] != docname]
-    except AttributeError:
-        pass
-    except KeyError:
-        pass
-    try:
         descinfo_tbl = env.pyg_descinfo_tbl
     except AttributeError:
         pass
@@ -118,10 +112,6 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         self.sig_stack = deque()
         self.desc_stack = deque()
         try:
-            self.env.pyg_sections
-        except AttributeError:
-            self.env.pyg_sections = []
-        try:
             self.env.pyg_descinfo_tbl
         except AttributeError:
             self.env.pyg_descinfo_tbl = {}
@@ -155,14 +145,12 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         if not node.children:
             return
         if node["ids"][0].startswith(MODULE_ID_PREFIX):
-            self._add_section(node)
             self._add_descinfo(node, summary, sigs, child_descs)
         elif child_descs:
             # No section level introduction: use the first toplevel directive
             # instead.
             desc_node = child_descs[0]
             summary = get_descinfo(desc_node, self.env).get("summary", "")
-            self._add_section(desc_node)
             self._add_descinfo_entry(node, get_descinfo(desc_node, self.env))
 
     def visit_desc(self, node):
@@ -186,14 +174,6 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         elif "signature" in node["classes"]:
             self._add_sig(node)
         raise docutils.nodes.SkipDeparture()
-
-    def _add_section(self, node):
-        entry = {
-            "docname": self.docname,
-            "fullname": get_fullname(node),
-            "refid": get_refid(node),
-        }
-        self.env.pyg_sections.append(entry)
 
     def _add_descinfo(self, node, summary, sigs, child_descs):
         entry = {
