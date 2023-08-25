@@ -110,7 +110,7 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
     }
 
     def __init__(self, app, document_node):
-        super().__init__(self, document_node)
+        super().__init__(document_node)
         self.app = app
         self.env = app.builder.env
         self.docname = self.env.docname
