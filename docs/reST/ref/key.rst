@@ -12,7 +12,6 @@ pygame.key
 
 | :sl:`pygame module to work with the keyboard`
 
-
 .. function:: get_focused
 
    | :sl:`true if the display is receiving keyboard input from the system`
