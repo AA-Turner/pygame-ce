@@ -94,8 +94,10 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         summary = self.summary_stack.pop()
         sigs = self.sig_stack.pop()
         child_descs = self.desc_stack.pop()
+        fullname = node["names"][0]
+        refid = node["ids"][0]
         if node.children and node["ids"][0].startswith(MODULE_ID_PREFIX):
-            self._add_descinfo(node, summary, sigs, child_descs)
+            self._add_descinfo(node, summary, sigs, child_descs, fullname, refid)
 
     def visit_desc(self, node):
         """Prepare to collect a summary and toc for this description"""
@@ -109,7 +111,9 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         summary = self.summary_stack.pop()
         sigs = self.sig_stack.pop()
         child_descs = self.desc_stack.pop()
-        self._add_descinfo(node, summary, sigs, child_descs)
+        fullname = node[0]["ids"][0]
+        refid = node[0]["ids"][0]
+        self._add_descinfo(node, summary, sigs, child_descs, fullname, refid)
         self.desc_stack[-1].append(node)
 
     def visit_inline(self, node):
@@ -121,15 +125,7 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
             self.sig_stack[-1].append(node[0].astext())
         raise docutils.nodes.SkipDeparture()
 
-    def _add_descinfo(self, node, summary, sigs, child_descs):
-        if isinstance(node, docutils.nodes.section):
-            fullname = node["names"][0]
-            refid = node["ids"][0]
-        elif isinstance(node, sphinx.addnodes.desc):
-            fullname = node[0]["ids"][0]
-            refid = node[0]["ids"][0]
-        else:
-            raise TypeError(f"Unrecognized node type '{node.__class__}'")
+    def _add_descinfo(self, node, summary, sigs, child_descs, fullname, refid):
         self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
             "fullname": fullname,
             "desctype": node.get("desctype", "module"),
