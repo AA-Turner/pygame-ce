@@ -147,15 +147,15 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         """Record descinfo information and add descinfo to parent's toc"""
 
         self._add_descinfo(node, *self._pop())
-        self._add_desc(node)
+        self.desc_stack[-1].append(node)
 
     def visit_inline(self, node):
         """Collect a summary or signature"""
 
         if "summaryline" in node["classes"]:
-            self._add_summary(node)
+            self.summary_stack[-1] = node[0].astext()
         elif "signature" in node["classes"]:
-            self._add_sig(node)
+            self.sig_stack[-1].append(node[0].astext())
         raise docutils.nodes.SkipDeparture()
 
     def _add_descinfo(self, node, summary, sigs, child_descs):
@@ -183,15 +183,6 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
 
     def _pop(self):
         return (self.summary_stack.pop(), self.sig_stack.pop(), self.desc_stack.pop())
-
-    def _add_desc(self, desc_node):
-        self.desc_stack[-1].append(desc_node)
-
-    def _add_summary(self, text_element_node):
-        self.summary_stack[-1] = text_element_node[0].astext()
-
-    def _add_sig(self, text_element_node):
-        self.sig_stack[-1].append(text_element_node[0].astext())
 
 
 def tour_descinfo(fn, node, env):
