@@ -48,9 +48,6 @@ def setup(app):
     # Add js files for theme changing in docs.
     app.add_js_file("script.js")
 
-    # Documents to leave untransformed by boilerplate
-    app.add_config_value("boilerplate_skip_transform", [], "")
-
     # Custom class directive signature
     app.add_directive_to_domain("py", "class", PyGameClasslike)
 
@@ -135,7 +132,7 @@ def depart_doc_title(self, node):
 
 
 def transform_document(app, doctree, docname):
-    if docname in app.config["boilerplate_skip_transform"]:
+    if docname == 'index':
         return
     doctree.walkabout(DocumentTransformer(app, doctree))
 
