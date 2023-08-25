@@ -59,6 +59,22 @@ def writer(app, pagename, _, context, doctree):
         del context["hdr_items"]
 
 
+def tour_descinfo(node, env):
+    if isinstance(node, docutils.nodes.section):
+        refid = node["ids"][0]
+    elif isinstance(node, sphinx.addnodes.desc):
+        refid = node[0]["ids"][0]
+    else:
+        raise TypeError(f"Unrecognized node type '{node.__class__}'")
+    try:
+        descinfo = env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
+    except KeyError:
+        return
+    yield descinfo
+    for refid in descinfo["children"]:
+        yield env.pyg_descinfo_tbl[refid]  # A KeyError would mean a bug.
+
+
 def collect_document_info(app, doctree):
     doctree.walkabout(CollectInfo(app.builder.env, doctree))
 
@@ -135,17 +151,6 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
             "refid": refid,
             "docname": self.env.docname,
         }
-
-
-def tour_descinfo(node, env):
-    refid = get_refid(node)
-    try:
-        descinfo = env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
-    except KeyError:
-        return
-    yield descinfo
-    for refid in descinfo["children"]:
-        yield env.pyg_descinfo_tbl[refid]  # A KeyError would mean a bug.
 
 
 class GetError(LookupError):
