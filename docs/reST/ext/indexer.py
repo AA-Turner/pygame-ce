@@ -119,30 +119,13 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
 
     def _add_descinfo(self, node, summary, sigs, child_descs):
         if isinstance(node, docutils.nodes.section):
-            try:
-                names = node["names"]
-            except KeyError:
-                raise GetError("No fullname: missing names attribute in section")
-            try:
-                fullname = names[0]
-            except IndexError:
-                raise GetError("No fullname: section has empty names list")
+            fullname = node["names"][0]
+            refid = node["ids"][0]
         elif isinstance(node, sphinx.addnodes.desc):
-            try:
-                sig = node[0]
-            except IndexError:
-                raise GetError("No fullname: missing children in desc")
-            try:
-                names = sig["ids"]
-            except KeyError:
-                raise GetError("No fullname: missing ids attribute in desc's child")
-            try:
-                fullname = names[0]
-            except IndexError:
-                raise GetError("No fullname: desc's child has empty names list")
+            fullname = node[0]["ids"][0]
+            refid = node[0]["ids"][0]
         else:
             raise TypeError(f"Unrecognized node type '{node.__class__}'")
-        refid = get_refid(node)
         self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
             "fullname": fullname,
             "desctype": node.get("desctype", "module"),
@@ -170,25 +153,8 @@ class GetError(LookupError):
 
 
 def get_refid(node):
-    try:
-        return get_ids(node)[0]
-    except IndexError:
-        raise GetError("Node has empty ids list")
-
-
-def get_ids(node):
     if isinstance(node, docutils.nodes.section):
-        try:
-            return node["ids"]
-        except KeyError:
-            raise GetError("No ids: section missing ids attribute")
+        return node["ids"][0]
     if isinstance(node, sphinx.addnodes.desc):
-        try:
-            sig = node[0]
-        except IndexError:
-            raise GetError("No ids: missing desc children")
-        try:
-            return sig["ids"]
-        except KeyError:
-            raise GetError("No ids: desc's child missing ids attribute")
+        return node[0]["ids"][0]
     raise TypeError(f"Unrecognized node type '{node.__class__}'")
