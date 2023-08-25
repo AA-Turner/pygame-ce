@@ -94,11 +94,10 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         summary = self.summary_stack.pop()
         sigs = self.sig_stack.pop()
         child_descs = self.desc_stack.pop()
-        fullname = node["names"][0]
         refid = node["ids"][0]
         if node.children and node["ids"][0].startswith(MODULE_ID_PREFIX):
             self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
-                "fullname": fullname,
+                "fullname": node["names"][0],
                 "desctype": node.get("desctype", "module"),
                 "summary": summary,
                 "signatures": sigs,
@@ -119,10 +118,9 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         summary = self.summary_stack.pop()
         sigs = self.sig_stack.pop()
         child_descs = self.desc_stack.pop()
-        fullname = node[0]["ids"][0]
         refid = node[0]["ids"][0]
         self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
-            "fullname": fullname,
+            "fullname": node[0]["ids"][0],
             "desctype": node.get("desctype", "module"),
             "summary": summary,
             "signatures": sigs,
