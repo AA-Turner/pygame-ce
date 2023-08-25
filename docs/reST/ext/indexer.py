@@ -30,7 +30,6 @@ pyg_descinfo_tbl: {<id>: {'fullname': <fullname>,
 """
 
 import docutils.nodes
-import sphinx.addnodes
 
 MODULE_ID_PREFIX = "module-"
 
@@ -68,14 +67,8 @@ def collect_document_info(app, doctree):
 
 
 class CollectInfo(docutils.nodes.SparseNodeVisitor):
-
-    """Records the information for a document"""
-
-    def unknown_visit(self, node):
-        return
-
-    def unknown_departure(self, node):
-        return
+    def unknown_visit(self, node): pass
+    def unknown_departure(self, node): pass
 
     def __init__(self, env, document_node):
         super().__init__(document_node)
