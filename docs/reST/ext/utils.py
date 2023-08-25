@@ -1,8 +1,6 @@
 import docutils.nodes
 import sphinx.addnodes
 
-import sys
-
 
 class GetError(LookupError):
     pass
