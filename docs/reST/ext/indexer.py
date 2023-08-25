@@ -39,7 +39,7 @@ def setup(app):
     app.connect("html-page-context", writer)
 
 
-def writer(app, pagename, _, context, doctree):
+def writer(app, _a, _b, _c, doctree):
     if doctree is None:
         return
 
@@ -51,15 +51,21 @@ def writer(app, pagename, _, context, doctree):
             items.append(descinfo)
             for refid in descinfo["children"]:
                 items.append(app.builder.env.pyg_descinfo_tbl[refid])  # A KeyError would mean a bug.
-    if not items:
-        return
-    print(pagename, len(items))
-    context["hdr_items"] = items
-    try:
-        with open(fr'src_c\doc\{pagename}_doc.h', "w", encoding="utf-8") as header:
-            header.write(app.builder.templates.render('header.h', context))
-    finally:
-        del context["hdr_items"]
+
+    assert [(item["fullname"], item["signatures"], item["summary"]) for item in items] == [
+        ('pygame.key', [], 'pygame module to work with the keyboard'),
+        ('pygame.key.get_focused', ['get_focused() -> bool'], 'true if the display is receiving keyboard input from the system'),
+        ('pygame.key.get_pressed', ['get_pressed() -> bools'], 'get the state of all keyboard buttons'),
+        ('pygame.key.get_mods', ['get_mods() -> int'], 'determine which modifier keys are being held'),
+        ('pygame.key.set_mods', ['set_mods(int) -> None'], 'temporarily set which modifier keys are pressed'),
+        ('pygame.key.set_repeat', ['set_repeat() -> None', 'set_repeat(delay) -> None', 'set_repeat(delay, interval) -> None'], 'control how held keys are repeated'),
+        ('pygame.key.get_repeat', ['get_repeat() -> (delay, interval)'], 'see how held keys are repeated'),
+        ('pygame.key.name', ['name(key, use_compat=True) -> str'], 'get the name of a key identifier'),
+        ('pygame.key.key_code', ['key_code(name=string) -> int'], 'get the key identifier from a key name'),
+        ('pygame.key.start_text_input', ['start_text_input() -> None'], 'start handling Unicode text input events'),
+        ('pygame.key.stop_text_input', ['stop_text_input() -> None'], 'stop handling Unicode text input events'),
+        ('pygame.key.set_text_input_rect', ['set_text_input_rect(Rect) -> None'], 'controls the position of the candidate list'),
+    ]
 
 
 def collect_document_info(app, doctree):
