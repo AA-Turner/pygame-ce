@@ -29,9 +29,6 @@ pyg_descinfo_tbl: {<id>: {'fullname': <fullname>,
 
 """
 
-import os
-import os.path
-
 import docutils.nodes
 import sphinx.addnodes
 
@@ -55,14 +52,11 @@ def writer(app, pagename, _, context, doctree):
     if not items:
         return
     print(pagename, len(items))
-    filename = f"{os.path.basename(pagename)}_doc.h"
-    filepath = os.path.join('src_c', 'doc', filename)
-    header = open(filepath, "w", encoding="utf-8")
     context["hdr_items"] = items
     try:
-        header.write(app.builder.templates.render('header.h', context))
+        with open(fr'src_c\doc\{pagename}_doc.h', "w", encoding="utf-8") as header:
+            header.write(app.builder.templates.render('header.h', context))
     finally:
-        header.close()
         del context["hdr_items"]
 
 
@@ -91,17 +85,6 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
     def unknown_departure(self, node):
         return
 
-    desctypes = {
-        "data",
-        "function",
-        "exception",
-        "class",
-        "attribute",
-        "method",
-        "staticmethod",
-        "classmethod",
-    }
-
     def __init__(self, env, document_node):
         super().__init__(document_node)
         self.env = env
@@ -122,20 +105,22 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         """Record section info"""
 
         summary, sigs, child_descs = self._pop()
-        if not node.children:
-            return
-        if node["ids"][0].startswith(MODULE_ID_PREFIX):
+        if node.children and node["ids"][0].startswith(MODULE_ID_PREFIX):
             self._add_descinfo(node, summary, sigs, child_descs)
-        elif child_descs:
-            # No section level introduction: use the first toplevel directive
-            # instead.
-            desc_node = child_descs[0]
-            self._add_descinfo_entry(node, get_descinfo_refid(get_refid(desc_node), self.env))
 
     def visit_desc(self, node):
         """Prepare to collect a summary and toc for this description"""
 
-        if node.get("desctype", "") not in self.desctypes:
+        if node.get("desctype", "") not in {
+            "data",
+            "function",
+            "exception",
+            "class",
+            "attribute",
+            "method",
+            "staticmethod",
+            "classmethod",
+        }:
             raise docutils.nodes.SkipNode()
         self._push()
 
