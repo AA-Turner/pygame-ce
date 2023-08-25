@@ -29,6 +29,7 @@ pyg_descinfo_tbl: {<id>: {'fullname': <fullname>,
 
 """
 
+import os
 import os.path
 from collections import deque
 
@@ -41,6 +42,29 @@ MODULE_ID_PREFIX = "module-"
 def setup(app):
     app.connect("env-purge-doc", prep_document_info)
     app.connect("doctree-read", collect_document_info)
+    app.connect("html-page-context", writer)
+
+
+def writer(app, pagename, _, context, doctree):
+    if doctree is None:
+        return
+
+    items = []
+    for section in doctree:
+        if isinstance(section, docutils.nodes.section):
+            tour_descinfo(items.append, section, app.builder.env)
+    if not items:
+        return
+    print(pagename, len(items))
+    filename = f"{os.path.basename(pagename)}_doc.h"
+    filepath = os.path.join('src_c', 'doc', filename)
+    header = open(filepath, "w", encoding="utf-8")
+    context["hdr_items"] = items
+    try:
+        header.write(app.builder.templates.render('header.h', context))
+    finally:
+        header.close()
+        del context["hdr_items"]
 
 
 def prep_document_info(app, env, docname):
