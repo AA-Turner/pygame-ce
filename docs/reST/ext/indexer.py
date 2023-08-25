@@ -97,7 +97,15 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         fullname = node["names"][0]
         refid = node["ids"][0]
         if node.children and node["ids"][0].startswith(MODULE_ID_PREFIX):
-            self._add_descinfo(node, summary, sigs, child_descs, fullname, refid)
+            self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
+                "fullname": fullname,
+                "desctype": node.get("desctype", "module"),
+                "summary": summary,
+                "signatures": sigs,
+                "children": [desc[0]["ids"][0] for desc in child_descs],
+                "refid": refid,
+                "docname": self.env.docname,
+            }
 
     def visit_desc(self, node):
         """Prepare to collect a summary and toc for this description"""
@@ -113,7 +121,15 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         child_descs = self.desc_stack.pop()
         fullname = node[0]["ids"][0]
         refid = node[0]["ids"][0]
-        self._add_descinfo(node, summary, sigs, child_descs, fullname, refid)
+        self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
+            "fullname": fullname,
+            "desctype": node.get("desctype", "module"),
+            "summary": summary,
+            "signatures": sigs,
+            "children": [desc[0]["ids"][0] for desc in child_descs],
+            "refid": refid,
+            "docname": self.env.docname,
+        }
         self.desc_stack[-1].append(node)
 
     def visit_inline(self, node):
@@ -124,14 +140,3 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         elif "signature" in node["classes"]:
             self.sig_stack[-1].append(node[0].astext())
         raise docutils.nodes.SkipDeparture()
-
-    def _add_descinfo(self, node, summary, sigs, child_descs, fullname, refid):
-        self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
-            "fullname": fullname,
-            "desctype": node.get("desctype", "module"),
-            "summary": summary,
-            "signatures": sigs,
-            "children": [desc[0]["ids"][0] for desc in child_descs],
-            "refid": refid,
-            "docname": self.env.docname,
-        }
