@@ -47,10 +47,10 @@ def writer(app, _a, _b, _c, doctree):
     for section in doctree:
         if isinstance(section, docutils.nodes.section):
             refid = section["ids"][0]
-            descinfo = app.builder.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
+            descinfo = app.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
             items.append(descinfo)
             for refid in descinfo["children"]:
-                items.append(app.builder.env.pyg_descinfo_tbl[refid])  # A KeyError would mean a bug.
+                items.append(app.env.pyg_descinfo_tbl[refid])  # A KeyError would mean a bug.
 
     assert [(item["fullname"], item["signatures"], item["summary"]) for item in items] == [
         ('pygame.key', [], 'pygame module to work with the keyboard'),
@@ -69,7 +69,7 @@ def writer(app, _a, _b, _c, doctree):
 
 
 def collect_document_info(app, doctree):
-    doctree.walkabout(CollectInfo(app.builder.env, doctree))
+    doctree.walkabout(CollectInfo(app.env, doctree))
 
 
 class CollectInfo(docutils.nodes.SparseNodeVisitor):
