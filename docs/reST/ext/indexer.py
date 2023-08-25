@@ -36,7 +36,6 @@ MODULE_ID_PREFIX = "module-"
 
 
 def setup(app):
-    app.connect("env-purge-doc", prep_document_info)
     app.connect("doctree-read", collect_document_info)
     app.connect("html-page-context", writer)
 
@@ -60,17 +59,6 @@ def writer(app, pagename, _, context, doctree):
         del context["hdr_items"]
 
 
-def prep_document_info(app, env, docname):
-    try:
-        descinfo_tbl = env.pyg_descinfo_tbl
-    except AttributeError:
-        pass
-    else:
-        to_remove = [k for k, v in descinfo_tbl.items() if v["docname"] == docname]
-        for k in to_remove:
-            del descinfo_tbl[k]
-
-
 def collect_document_info(app, doctree):
     doctree.walkabout(CollectInfo(app.builder.env, doctree))
 
@@ -88,46 +76,36 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
     def __init__(self, env, document_node):
         super().__init__(document_node)
         self.env = env
-        self.summary_stack = []
-        self.sig_stack = []
-        self.desc_stack = []
+
+        self.summary_stack = [""]
+        self.sig_stack = [[]]
+        self.desc_stack = [[]]
         try:
             self.env.pyg_descinfo_tbl
         except AttributeError:
             self.env.pyg_descinfo_tbl = {}
 
-    def visit_section(self, node):
-        if not node["names"]:
-            raise docutils.nodes.SkipNode()
-        self._push()
-
     def depart_section(self, node):
         """Record section info"""
-
-        summary, sigs, child_descs = self._pop()
+        summary = self.summary_stack.pop()
+        sigs = self.sig_stack.pop()
+        child_descs = self.desc_stack.pop()
         if node.children and node["ids"][0].startswith(MODULE_ID_PREFIX):
             self._add_descinfo(node, summary, sigs, child_descs)
 
     def visit_desc(self, node):
         """Prepare to collect a summary and toc for this description"""
-
-        if node.get("desctype", "") not in {
-            "data",
-            "function",
-            "exception",
-            "class",
-            "attribute",
-            "method",
-            "staticmethod",
-            "classmethod",
-        }:
-            raise docutils.nodes.SkipNode()
-        self._push()
+        self.summary_stack.append("")
+        self.sig_stack.append([])
+        self.desc_stack.append([])
 
     def depart_desc(self, node):
         """Record descinfo information and add descinfo to parent's toc"""
 
-        self._add_descinfo(node, *self._pop())
+        summary = self.summary_stack.pop()
+        sigs = self.sig_stack.pop()
+        child_descs = self.desc_stack.pop()
+        self._add_descinfo(node, summary, sigs, child_descs)
         self.desc_stack[-1].append(node)
 
     def visit_inline(self, node):
@@ -164,30 +142,16 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
                 raise GetError("No fullname: desc's child has empty names list")
         else:
             raise TypeError(f"Unrecognized node type '{node.__class__}'")
-        entry = {
+        refid = get_refid(node)
+        self.env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)] = {
             "fullname": fullname,
             "desctype": node.get("desctype", "module"),
             "summary": summary,
             "signatures": sigs,
             "children": list(map(get_refid, child_descs)),
-            "refid": get_refid(node),
+            "refid": refid,
             "docname": self.env.docname,
         }
-        self._add_descinfo_entry(node, entry)
-
-    def _add_descinfo_entry(self, node, entry):
-        key = get_refid(node)
-        if key.startswith(MODULE_ID_PREFIX):
-            key = key[len(MODULE_ID_PREFIX) :]
-        self.env.pyg_descinfo_tbl[key] = entry
-
-    def _push(self):
-        self.summary_stack.append("")
-        self.sig_stack.append([])
-        self.desc_stack.append([])
-
-    def _pop(self):
-        return (self.summary_stack.pop(), self.sig_stack.pop(), self.desc_stack.pop())
 
 
 def tour_descinfo(fn, node, env):
@@ -208,10 +172,8 @@ def tour_descinfo_refid(fn, refid, env):
 
 
 def get_descinfo_refid(refid, env):
-    if refid.startswith(MODULE_ID_PREFIX):
-        refid = refid[len(MODULE_ID_PREFIX) :]
     try:
-        return env.pyg_descinfo_tbl[refid]
+        return env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
     except KeyError:
         raise GetError("Not found")
 
