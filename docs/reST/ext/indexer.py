@@ -135,19 +135,7 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
             "desctype": node.get("desctype", "module"),
             "summary": summary,
             "signatures": sigs,
-            "children": list(map(get_refid, child_descs)),
+            "children": [desc[0]["ids"][0] for desc in child_descs],
             "refid": refid,
             "docname": self.env.docname,
         }
-
-
-class GetError(LookupError):
-    pass
-
-
-def get_refid(node):
-    if isinstance(node, docutils.nodes.section):
-        return node["ids"][0]
-    if isinstance(node, sphinx.addnodes.desc):
-        return node[0]["ids"][0]
-    raise TypeError(f"Unrecognized node type '{node.__class__}'")
