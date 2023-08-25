@@ -47,7 +47,7 @@ def writer(app, pagename, _, context, doctree):
     items = []
     for section in doctree:
         if isinstance(section, docutils.nodes.section):
-            tour_descinfo(items.append, section, app.builder.env)
+            items.extend(tour_descinfo(section, app.builder.env))
     if not items:
         return
     print(pagename, len(items))
@@ -154,28 +154,15 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         }
 
 
-def tour_descinfo(fn, node, env):
+def tour_descinfo(node, env):
+    refid = get_refid(node)
     try:
-        descinfo = get_descinfo_refid(get_refid(node), env)
-    except GetError:
-        return
-    fn(descinfo)
-    for refid in descinfo["children"]:
-        tour_descinfo_refid(fn, refid, env)
-
-
-def tour_descinfo_refid(fn, refid, env):
-    descinfo = env.pyg_descinfo_tbl[refid]  # A KeyError would mean a bug.
-    fn(descinfo)
-    for refid in descinfo["children"]:
-        tour_descinfo_refid(fn, refid, env)
-
-
-def get_descinfo_refid(refid, env):
-    try:
-        return env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
+        descinfo = env.pyg_descinfo_tbl[refid.removeprefix(MODULE_ID_PREFIX)]
     except KeyError:
-        raise GetError("Not found")
+        return
+    yield descinfo
+    for refid in descinfo["children"]:
+        yield env.pyg_descinfo_tbl[refid]  # A KeyError would mean a bug.
 
 
 class GetError(LookupError):
