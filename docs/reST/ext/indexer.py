@@ -35,8 +35,6 @@ from collections import deque
 import docutils.nodes
 import sphinx.addnodes
 
-from ext.utils import Visitor, get_refid, GetError
-
 MODULE_ID_PREFIX = "module-"
 
 
@@ -66,9 +64,15 @@ def collect_document_info(app, doctree):
     doctree.walkabout(CollectInfo(app, doctree))
 
 
-class CollectInfo(Visitor):
+class CollectInfo(docutils.nodes.SparseNodeVisitor):
 
     """Records the information for a document"""
+
+    def unknown_visit(self, node):
+        return
+
+    def unknown_departure(self, node):
+        return
 
     desctypes = {
         "data",
@@ -82,7 +86,9 @@ class CollectInfo(Visitor):
     }
 
     def __init__(self, app, document_node):
-        super().__init__(app, document_node)
+        super().__init__(self, document_node)
+        self.app = app
+        self.env = app.builder.env
         self.docname = self.env.docname
         self.summary_stack = deque()
         self.sig_stack = deque()
@@ -102,20 +108,20 @@ class CollectInfo(Visitor):
         source = node["source"]
         head, file_name = os.path.split(source)
         if not file_name:
-            raise self.skip_node
+            raise docutils.nodes.SkipNode()
         head, dir_name = os.path.split(head)
         if dir_name != "ref":
-            raise self.skip_node
+            raise docutils.nodes.SkipNode()
         head, dir_name = os.path.split(head)
         if dir_name != "reST":
-            raise self.skip_node
+            raise docutils.nodes.SkipNode()
         head, dir_name = os.path.split(head)
         if dir_name != "docs":
-            raise self.skip_node
+            raise docutils.nodes.SkipNode()
 
     def visit_section(self, node):
         if not node["names"]:
-            raise self.skip_node
+            raise docutils.nodes.SkipNode()
         self._push()
 
     def depart_section(self, node):
@@ -139,7 +145,7 @@ class CollectInfo(Visitor):
         """Prepare to collect a summary and toc for this description"""
 
         if node.get("desctype", "") not in self.desctypes:
-            raise self.skip_node
+            raise docutils.nodes.SkipNode()
         self._push()
 
     def depart_desc(self, node):
@@ -155,7 +161,7 @@ class CollectInfo(Visitor):
             self._add_summary(node)
         elif "signature" in node["classes"]:
             self._add_sig(node)
-        raise self.skip_departure
+        raise docutils.nodes.SkipDeparture()
 
     def _add_section(self, node):
         entry = {
@@ -263,3 +269,32 @@ def get_sectionname(section):
         return names[0]
     except IndexError:
         raise GetError("No fullname: section has empty names list")
+
+
+class GetError(LookupError):
+    pass
+
+
+def get_refid(node):
+    try:
+        return get_ids(node)[0]
+    except IndexError:
+        raise GetError("Node has empty ids list")
+
+
+def get_ids(node):
+    if isinstance(node, docutils.nodes.section):
+        try:
+            return node["ids"]
+        except KeyError:
+            raise GetError("No ids: section missing ids attribute")
+    if isinstance(node, sphinx.addnodes.desc):
+        try:
+            sig = node[0]
+        except IndexError:
+            raise GetError("No ids: missing desc children")
+        try:
+            return sig["ids"]
+        except KeyError:
+            raise GetError("No ids: desc's child missing ids attribute")
+    raise TypeError(f"Unrecognized node type '{node.__class__}'")
