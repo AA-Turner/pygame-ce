@@ -59,7 +59,7 @@ loaded. This module must be imported explicitly to be used. ::
    import pygame
    import pygame.freetype
 
-.. versionaddedold:: 1.9.2 :mod:`freetype`
+.. versionadded:: 1.9.2 :mod:`freetype`
 
 
 .. function:: get_error
@@ -123,7 +123,7 @@ loaded. This module must be imported explicitly to be used. ::
 
    Returns ``True`` if the ``pygame.freetype`` module is currently initialized.
 
-   .. versionaddedold:: 1.9.5
+   .. versionadded:: 1.9.5
 
 .. function:: was_init
 
@@ -171,7 +171,7 @@ loaded. This module must be imported explicitly to be used. ::
    comma-separated font names, or a bytes of comma-separated font names, in
    which case the set of names will be searched in order.
 
-   .. versionaddedold:: 2.0.1 Accept an iterable of font names.
+   .. versionadded:: 2.0.1 Accept an iterable of font names.
 
 .. function:: get_default_font
 
@@ -739,7 +739,7 @@ loaded. This module must be imported explicitly to be used. ::
       unset and text will render with a transparent background by default.
       Applies to :meth:`render` and :meth:`render_to`.
 
-   .. versionaddedold:: 2.0.0
+   .. versionadded:: 2.0.0
 
    .. attribute:: origin
 

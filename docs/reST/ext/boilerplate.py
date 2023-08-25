@@ -299,14 +299,6 @@ def toc_ref(fullname, refid):
     return TocRef("", fullname, name=name, refuri=as_refuri(refid), classes=["toc"])
 
 
-def decorate_signatures(desc, classname):
-    prefix = classname + "."
-    for child in desc.children:
-        if isinstance(child, desc_signature) and isinstance(child[0], desc_name):
-            new_desc_classname = desc_classname("", prefix)
-            child.insert(0, new_desc_classname)
-
-
 def inject_template_globals(app, pagename, templatename, context, doctree):
     def lowercase_name(d):
         return get_name(d["fullname"]).lower()

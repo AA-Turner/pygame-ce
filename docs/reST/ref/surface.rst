@@ -101,20 +101,20 @@
       An optional area rectangle can be passed as well. This represents a
       smaller portion of the source Surface to draw.
 
-      .. versionaddedold:: 1.8
+      .. versionadded:: 1.8
          Optional ``special_flags``: ``BLEND_ADD``, ``BLEND_SUB``,
          ``BLEND_MULT``, ``BLEND_MIN``, ``BLEND_MAX``.
 
-      .. versionaddedold:: 1.8.1
+      .. versionadded:: 1.8.1
          Optional ``special_flags``: ``BLEND_RGBA_ADD``, ``BLEND_RGBA_SUB``,
          ``BLEND_RGBA_MULT``, ``BLEND_RGBA_MIN``, ``BLEND_RGBA_MAX``
          ``BLEND_RGB_ADD``, ``BLEND_RGB_SUB``, ``BLEND_RGB_MULT``,
          ``BLEND_RGB_MIN``, ``BLEND_RGB_MAX``.
 
-      .. versionaddedold:: 1.9.2
+      .. versionadded:: 1.9.2
          Optional ``special_flags``: ``BLEND_PREMULTIPLIED``
 
-      .. versionaddedold:: 2.0.0
+      .. versionadded:: 2.0.0
          Optional ``special_flags``:  ``BLEND_ALPHA_SDL2`` - Uses the SDL2 blitter for alpha blending,
          this gives different results than the default blitter, which is modelled after SDL1, due to
          different approximations used for the alpha blending formula. The SDL2 blitter also supports
@@ -180,7 +180,7 @@
           - For drawing a sequence of (source, dest) pairs with whole source Surface
             and a singular special_flag, use the :meth:`fblits()` method.
 
-      .. versionaddedold:: 1.9.4
+      .. versionadded:: 1.9.4
 
       .. ## Surface.blits ##
 
@@ -287,11 +287,11 @@
       the Alpha (A part of ``RGBA``) is ignored unless the surface uses per pixel
       alpha (Surface has the ``SRCALPHA`` flag).
 
-      .. versionaddedold:: 1.8
+      .. versionadded:: 1.8
          Optional ``special_flags``: ``BLEND_ADD``, ``BLEND_SUB``,
          ``BLEND_MULT``, ``BLEND_MIN``, ``BLEND_MAX``.
 
-      .. versionaddedold:: 1.8.1
+      .. versionadded:: 1.8.1
          Optional ``special_flags``: ``BLEND_RGBA_ADD``, ``BLEND_RGBA_SUB``,
          ``BLEND_RGBA_MULT``, ``BLEND_RGBA_MIN``, ``BLEND_RGBA_MAX``
          ``BLEND_RGB_ADD``, ``BLEND_RGB_SUB``, ``BLEND_RGB_MULT``,
@@ -312,7 +312,7 @@
       contained by the Surface clip area. It is safe to have dx and dy values
       that exceed the surface size.
 
-      .. versionaddedold:: 1.9
+      .. versionadded:: 1.9
 
       .. ## Surface.scroll ##
 
@@ -363,7 +363,7 @@
       This value is different than the per pixel Surface alpha. For a surface
       with per pixel alpha, blanket alpha is ignored and ``None`` is returned.
 
-      .. versionchangedold:: 2.0 per-surface alpha can be combined with per-pixel
+      .. versionchanged:: 2.0 per-surface alpha can be combined with per-pixel
                           alpha.
 
       The optional flags argument can be set to ``pygame.RLEACCEL`` to provide
@@ -487,7 +487,7 @@
          if you want a tuple, and not a Color. This should only matter if
          you want to use the color as a key in a dict.
       
-      .. versionaddedold:: 1.9
+      .. versionadded:: 1.9
       
       .. ## Surface.get_at ##
 
@@ -527,7 +527,7 @@
 
       This function will temporarily lock and unlock the Surface as needed.
 
-      .. versionaddedold:: 1.9.2
+      .. versionadded:: 1.9.2
 
       .. versionchanged:: 2.3.1 can now also accept both float coordinates and Vector2s for pixels.
 
@@ -544,7 +544,7 @@
 
       Returning a list of ``Color(with length 3)`` instances instead of tuples.
 
-      .. versionaddedold:: 1.9
+      .. versionadded:: 1.9
 
       .. ## Surface.get_palette ##
 
@@ -556,7 +556,7 @@
       Returns the red, green, and blue color values for a single index in a
       Surface palette. The index should be a value from 0 to 255.
 
-      .. versionaddedold:: 1.9
+      .. versionadded:: 1.9
          Returning ``Color(with length 3)`` instance instead of a tuple.
 
       .. ## Surface.get_palette_at ##
@@ -854,9 +854,9 @@
       .. note:: Starting in pygame 2.0, the masks are read-only and
          accordingly this method will raise a TypeError if called.
 
-      .. deprecatedold:: 2.0.0
+      .. deprecated:: 2.0.0
 
-      .. versionaddedold:: 1.8.1
+      .. versionadded:: 1.8.1
 
       .. ## Surface.set_masks ##
 
@@ -882,9 +882,9 @@
       .. note:: Starting in pygame 2.0, the shifts are read-only and
          accordingly this method will raise a TypeError if called.
 
-      .. deprecatedold:: 2.0.0
+      .. deprecated:: 2.0.0
 
-      .. versionaddedold:: 1.8.1
+      .. versionadded:: 1.8.1
 
       .. ## Surface.set_shifts ##
 
@@ -911,7 +911,7 @@
 
       This function will temporarily lock and unlock the Surface as needed.
 
-      .. versionaddedold:: 1.8
+      .. versionadded:: 1.8
 
       .. ## Surface.get_bounding_rect ##
 
@@ -959,7 +959,7 @@
       interface accesses, the surface remains locked until the BufferProxy
       object is released.
 
-      .. versionaddedold:: 1.9.2
+      .. versionadded:: 1.9.2
 
    .. method:: get_buffer
 
@@ -975,7 +975,7 @@
       This method implicitly locks the Surface. The lock will be released when
       the returned :mod:`pygame.BufferProxy` object is garbage collected.
 
-      .. versionaddedold:: 1.8
+      .. versionadded:: 1.8
 
       .. ## Surface.get_buffer ##
 
@@ -986,7 +986,7 @@
 
       The starting address of the surface's raw pixel bytes.
 
-      .. versionaddedold:: 1.9.2
+      .. versionadded:: 1.9.2
 
    .. method:: premul_alpha
 

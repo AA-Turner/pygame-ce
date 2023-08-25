@@ -123,7 +123,7 @@ solves no longer exists, it will likely be removed in the future.
    which case the set of names will be searched in order.
    If none of the given names are found, None is returned.
 
-   .. versionaddedold:: 2.0.1 Accept an iterable of font names.
+   .. versionadded:: 2.0.1 Accept an iterable of font names.
 
    .. versionchanged:: 2.1.3 Checks through user fonts instead of just global fonts for Windows.
 
@@ -152,7 +152,7 @@ solves no longer exists, it will likely be removed in the future.
    comma-separated font names, or a bytes of comma-separated font names, in
    which case the set of names will be searched in order.
 
-   .. versionaddedold:: 2.0.1 Accept an iterable of font names.
+   .. versionadded:: 2.0.1 Accept an iterable of font names.
 
    .. versionchanged:: 2.1.3 Checks through user fonts instead of just global fonts for Windows.
 
@@ -196,7 +196,7 @@ solves no longer exists, it will likely be removed in the future.
       normal. This can be mixed with the italic, underline and
       strikethrough modes.
 
-      .. versionaddedold:: 2.0.0
+      .. versionadded:: 2.0.0
 
       .. ## Font.bold ##
 
@@ -242,7 +242,7 @@ solves no longer exists, it will likely be removed in the future.
       than when normal. This can be mixed with the bold, underline and
       strikethrough modes.
 
-      .. versionaddedold:: 2.0.0
+      .. versionadded:: 2.0.0
 
       .. ## Font.italic ##
 
@@ -258,7 +258,7 @@ solves no longer exists, it will likely be removed in the future.
       of font size. This can be mixed with the bold, italic and
       strikethrough modes.
 
-      .. versionaddedold:: 2.0.0
+      .. versionadded:: 2.0.0
 
       .. ## Font.underline ##
    
@@ -353,7 +353,7 @@ solves no longer exists, it will likely be removed in the future.
       Font rendering is not thread safe: only a single thread can render text
       at any time.
 
-      .. versionchangedold:: 2.0.3 Rendering UCS4 unicode works and does not
+      .. versionchanged:: 2.0.3 Rendering UCS4 unicode works and does not
         raise an exception. Use `if hasattr(pygame.font, "UCS4"):` to see if
         pygame supports rendering UCS4 unicode including more languages and
         emoji.

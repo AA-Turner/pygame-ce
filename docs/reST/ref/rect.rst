@@ -80,7 +80,7 @@
       r = Rect(0, 1, 2, 3)
       x, y, w, h = r
 
-   .. versionaddedold:: 1.9.2
+   .. versionadded:: 1.9.2
       The Rect class can be subclassed. Methods such as ``copy()`` and ``move()``
       will recognize this and return instances of the subclass.
       However, the subclass's ``__init__()`` method is not called,
@@ -176,7 +176,7 @@
       Sets the position and size of the rectangle, in place. See
       parameters for :meth:`pygame.Rect` for the parameters of this function.
 
-      .. versionaddedold:: 2.0.1
+      .. versionadded:: 2.0.1
 
       .. ## Rect.update ##
 
@@ -266,7 +266,7 @@
          else:
              print("No clipping. The line is fully outside the rect.")
 
-      .. versionaddedold:: 2.0.0
+      .. versionadded:: 2.0.0
 
       .. ## Rect.clipline ##
 

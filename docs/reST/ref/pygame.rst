@@ -74,7 +74,7 @@ object instead of the module, which can be used to test for availability.
 
    Returns ``True`` if pygame is currently initialized.
 
-   .. versionaddedold:: 1.9.5
+   .. versionadded:: 1.9.5
 
    .. ## pygame.get_init ##
 
@@ -126,7 +126,7 @@ object instead of the module, which can be used to test for availability.
    It can be used to detect which features may or may not be
    available through pygame.
 
-   .. versionaddedold:: 1.7.0
+   .. versionadded:: 1.7.0
 
    .. versionchanged:: 2.1.4 ``linked`` keyword argument added
 
@@ -140,7 +140,7 @@ object instead of the module, which can be used to test for availability.
    Returns the byte order of the SDL library. It returns ``1234`` for little
    endian byte order and ``4321`` for big endian byte order.
 
-   .. versionaddedold:: 1.8
+   .. versionadded:: 1.8
 
    .. ## pygame.get_sdl_byteorder ##
 
@@ -179,7 +179,7 @@ object instead of the module, which can be used to test for availability.
 
    This function is not needed for normal pygame-ce usage.
 
-   .. versionaddedold:: 1.9.2 (primarily for use in unit tests)
+   .. versionadded:: 1.9.2 (primarily for use in unit tests)
 
    .. ## pygame.encode_string ##
 
@@ -201,7 +201,7 @@ object instead of the module, which can be used to test for availability.
 
    This function is not needed for normal pygame-ce usage.
 
-   .. versionaddedold:: 1.9.2 (primarily for use in unit tests)
+   .. versionadded:: 1.9.2 (primarily for use in unit tests)
 
    .. ## pygame.encode_file_path ##
 
@@ -261,7 +261,7 @@ check which version of pygame has been imported.
            print('Warning, older version of pygame (%s)' %  pygame.version.ver)
            disable_advanced_features = True
 
-   .. versionaddedold:: 1.9.6 Attributes ``major``, ``minor``, and ``patch``.
+   .. versionadded:: 1.9.6 Attributes ``major``, ``minor``, and ``patch``.
 
    ::
 
@@ -269,11 +269,11 @@ check which version of pygame has been imported.
       vernum.minor == vernum[1]
       vernum.patch == vernum[2]
 
-   .. versionchangedold:: 1.9.6
+   .. versionchanged:: 1.9.6
       ``str(pygame.version.vernum)`` returns a string like ``"2.0.0"`` instead
       of ``"(2, 0, 0)"``.
 
-   .. versionchangedold:: 1.9.6
+   .. versionchanged:: 1.9.6
       ``repr(pygame.version.vernum)`` returns a string like
       ``"PygameVersion(major=2, minor=0, patch=0)"`` instead of ``"(2, 0, 0)"``.
 
@@ -294,7 +294,7 @@ check which version of pygame has been imported.
    returning an empty string ``""``. 
    It has always been returning an empty string since ``v1.9.5``.
    
-   .. versionchangedold:: 1.9.5
+   .. versionchanged:: 1.9.5
       Always returns an empty string ``""``.
 
    .. ## pygame.version.rev ##
@@ -319,7 +319,7 @@ check which version of pygame has been imported.
     >>> pygame.version.SDL
     SDLVersion(major=2, minor=26, patch=5)
 
-   .. versionaddedold:: 2.0.0
+   .. versionadded:: 2.0.0
 
    .. ## pygame.version.SDL ##
 

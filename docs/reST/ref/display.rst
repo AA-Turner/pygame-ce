@@ -205,7 +205,7 @@ required).
         window_surface = pygame.display.set_mode((1920, 1080), flags)
         vsync_success=False
 
-   .. versionaddedold:: 2.0.0 ``vsync`` parameter
+   .. versionadded:: 2.0.0 ``vsync`` parameter
 
    .. versionchanged:: 2.2.0 passing ``vsync`` can raise an exception
 
@@ -228,7 +228,7 @@ required).
    environment variable.
 
 
-   .. versionchangedold:: 1.9.5 ``display`` argument added
+   .. versionchanged:: 1.9.5 ``display`` argument added
 
    .. versionchanged:: 2.1.3
       pygame now ensures that subsequent calls to this function clears the
@@ -344,7 +344,7 @@ required).
    an empty dictionary will be returned. Most platforms will return a "window"
    key with the value set to the system id for the current display.
 
-   .. versionaddedold:: 1.7.1
+   .. versionadded:: 1.7.1
 
    .. ## pygame.display.get_wm_info ##
 
@@ -366,7 +366,7 @@ required).
    mode, this function *should* be used to replace many use cases of
    ``pygame.display.list_modes()`` whenever applicable.
 
-   .. versionaddedold:: 2.0.0
+   .. versionadded:: 2.0.0
 
 .. function:: list_modes
 
@@ -400,7 +400,7 @@ required).
    physical monitor resolution unless the user explicitly requests a different
    one (e.g. in an options menu or configuration file).
 
-   .. versionchangedold:: 1.9.5 ``display`` argument added
+   .. versionchanged:: 1.9.5 ``display`` argument added
 
    .. ## pygame.display.list_modes ##
 
@@ -422,7 +422,7 @@ required).
 
    The display index ``0`` means the default display is used.
 
-   .. versionchangedold:: 1.9.5 ``display`` argument added
+   .. versionchanged:: 1.9.5 ``display`` argument added
 
    .. ## pygame.display.mode_ok ##
 
@@ -486,7 +486,7 @@ required).
 
      Minimum bit size of the frame buffer. Defaults to 0.
 
-   .. versionaddedold:: 2.0.0 Additional attributes:
+   .. versionadded:: 2.0.0 Additional attributes:
 
    ::
 
@@ -685,7 +685,7 @@ required).
    Returns the number of available displays. This is always 1 if
    :func:`pygame.get_sdl_version()` returns a major version number below 2.
 
-   .. versionaddedold:: 1.9.5
+   .. versionadded:: 1.9.5
 
    .. ## pygame.display.get_num_displays ##
 
@@ -697,7 +697,7 @@ required).
    Returns the size of the window initialized with :func:`pygame.display.set_mode()`.
    This may differ from the size of the display surface if ``SCALED`` is used.
 
-   .. versionaddedold:: 2.0.0
+   .. versionadded:: 2.0.0
 
    .. ## pygame.display.get_window_size ##
 
@@ -715,7 +715,7 @@ required).
              :func:`pygame.display.set_allow_screensaver()` for
              caveats with screensaver support.
 
-   .. versionaddedold:: 2.0.0
+   .. versionadded:: 2.0.0
 
    .. ## pygame.display.get_allow_screensaver ##
 
@@ -742,7 +742,7 @@ required).
              providing any supported method for determining whether
              it supports changing the screensaver state.
 
-   .. versionaddedold:: 2.0.0
+   .. versionadded:: 2.0.0
 
 .. function:: is_fullscreen
 
