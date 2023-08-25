@@ -31,7 +31,6 @@ pyg_descinfo_tbl: {<id>: {'fullname': <fullname>,
 
 import os
 import os.path
-from collections import deque
 
 import docutils.nodes
 import sphinx.addnodes
@@ -79,7 +78,7 @@ def prep_document_info(app, env, docname):
 
 
 def collect_document_info(app, doctree):
-    doctree.walkabout(CollectInfo(app, doctree))
+    doctree.walkabout(CollectInfo(app.builder.env, doctree))
 
 
 class CollectInfo(docutils.nodes.SparseNodeVisitor):
@@ -103,14 +102,12 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         "classmethod",
     }
 
-    def __init__(self, app, document_node):
+    def __init__(self, env, document_node):
         super().__init__(document_node)
-        self.app = app
-        self.env = app.builder.env
-        self.docname = self.env.docname
-        self.summary_stack = deque()
-        self.sig_stack = deque()
-        self.desc_stack = deque()
+        self.env = env
+        self.summary_stack = []
+        self.sig_stack = []
+        self.desc_stack = []
         try:
             self.env.pyg_descinfo_tbl
         except AttributeError:
@@ -133,8 +130,7 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
             # No section level introduction: use the first toplevel directive
             # instead.
             desc_node = child_descs[0]
-            summary = get_descinfo(desc_node, self.env).get("summary", "")
-            self._add_descinfo_entry(node, get_descinfo(desc_node, self.env))
+            self._add_descinfo_entry(node, get_descinfo_refid(get_refid(desc_node), self.env))
 
     def visit_desc(self, node):
         """Prepare to collect a summary and toc for this description"""
@@ -159,14 +155,38 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
         raise docutils.nodes.SkipDeparture()
 
     def _add_descinfo(self, node, summary, sigs, child_descs):
+        if isinstance(node, docutils.nodes.section):
+            try:
+                names = node["names"]
+            except KeyError:
+                raise GetError("No fullname: missing names attribute in section")
+            try:
+                fullname = names[0]
+            except IndexError:
+                raise GetError("No fullname: section has empty names list")
+        elif isinstance(node, sphinx.addnodes.desc):
+            try:
+                sig = node[0]
+            except IndexError:
+                raise GetError("No fullname: missing children in desc")
+            try:
+                names = sig["ids"]
+            except KeyError:
+                raise GetError("No fullname: missing ids attribute in desc's child")
+            try:
+                fullname = names[0]
+            except IndexError:
+                raise GetError("No fullname: desc's child has empty names list")
+        else:
+            raise TypeError(f"Unrecognized node type '{node.__class__}'")
         entry = {
-            "fullname": get_fullname(node),
+            "fullname": fullname,
             "desctype": node.get("desctype", "module"),
             "summary": summary,
             "signatures": sigs,
-            "children": [get_refid(n) for n in child_descs],
+            "children": list(map(get_refid, child_descs)),
             "refid": get_refid(node),
-            "docname": self.docname,
+            "docname": self.env.docname,
         }
         self._add_descinfo_entry(node, entry)
 
@@ -187,7 +207,7 @@ class CollectInfo(docutils.nodes.SparseNodeVisitor):
 
 def tour_descinfo(fn, node, env):
     try:
-        descinfo = get_descinfo(node, env)
+        descinfo = get_descinfo_refid(get_refid(node), env)
     except GetError:
         return
     fn(descinfo)
@@ -202,10 +222,6 @@ def tour_descinfo_refid(fn, refid, env):
         tour_descinfo_refid(fn, refid, env)
 
 
-def get_descinfo(node, env):
-    return get_descinfo_refid(get_refid(node), env)
-
-
 def get_descinfo_refid(refid, env):
     if refid.startswith(MODULE_ID_PREFIX):
         refid = refid[len(MODULE_ID_PREFIX) :]
@@ -213,40 +229,6 @@ def get_descinfo_refid(refid, env):
         return env.pyg_descinfo_tbl[refid]
     except KeyError:
         raise GetError("Not found")
-
-
-def get_fullname(node):
-    if isinstance(node, docutils.nodes.section):
-        return get_sectionname(node)
-    if isinstance(node, sphinx.addnodes.desc):
-        return get_descname(node)
-    raise TypeError(f"Unrecognized node type '{node.__class__}'")
-
-
-def get_descname(desc):
-    try:
-        sig = desc[0]
-    except IndexError:
-        raise GetError("No fullname: missing children in desc")
-    try:
-        names = sig["ids"]
-    except KeyError:
-        raise GetError("No fullname: missing ids attribute in desc's child")
-    try:
-        return names[0]
-    except IndexError:
-        raise GetError("No fullname: desc's child has empty names list")
-
-
-def get_sectionname(section):
-    try:
-        names = section["names"]
-    except KeyError:
-        raise GetError("No fullname: missing names attribute in section")
-    try:
-        return names[0]
-    except IndexError:
-        raise GetError("No fullname: section has empty names list")
 
 
 class GetError(LookupError):
