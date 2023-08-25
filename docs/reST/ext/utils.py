@@ -6,32 +6,6 @@ class GetError(LookupError):
     pass
 
 
-def get_descname(desc):
-    try:
-        sig = desc[0]
-    except IndexError:
-        raise GetError("No fullname: missing children in desc")
-    try:
-        names = sig["ids"]
-    except KeyError:
-        raise GetError("No fullname: missing ids attribute in desc's child")
-    try:
-        return names[0]
-    except IndexError:
-        raise GetError("No fullname: desc's child has empty names list")
-
-
-def get_sectionname(section):
-    try:
-        names = section["names"]
-    except KeyError:
-        raise GetError("No fullname: missing names attribute in section")
-    try:
-        return names[0]
-    except IndexError:
-        raise GetError("No fullname: section has empty names list")
-
-
 def get_refuri(node):
     return as_refuri(get_refid(node))
 

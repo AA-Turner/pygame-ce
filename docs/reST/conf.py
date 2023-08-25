@@ -3,6 +3,6 @@ sys.path.append(os.path.abspath('.'))
 extensions = [
     'ext.indexer',
     'ext.headers',
-    'ext.boilerplate',
+    # 'ext.boilerplate',
 ]
 templates_path = ['_templates']

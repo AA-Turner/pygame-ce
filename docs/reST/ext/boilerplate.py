@@ -41,12 +41,6 @@ class PyGameClasslike(PyClasslike):
 
 
 def setup(app):
-    # This extension uses indexer collected tables.
-    app.setup_extension("ext.indexer")
-
-    # Add js files for theme changing in docs.
-    app.add_js_file("script.js")
-
     # Custom class directive signature
     app.add_directive_to_domain("py", "class", PyGameClasslike)
 
