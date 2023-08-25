@@ -1,4 +1,17 @@
-.. include:: common.txt
+.. Pygame specific reST elements.
+
+.. role:: summaryline
+
+.. role:: sl(summaryline)
+   :class: summaryline
+
+.. role:: signature
+
+.. role:: sg(signature)
+   :class: signature
+
+.. role:: small-heading
+   :class: small-heading
 
 :mod:`pygame.key`
 =================
