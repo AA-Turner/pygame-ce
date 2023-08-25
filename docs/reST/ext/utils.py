@@ -6,14 +6,6 @@ class GetError(LookupError):
     pass
 
 
-def get_fullname(node):
-    if isinstance(node, docutils.nodes.section):
-        return get_sectionname(node)
-    if isinstance(node, sphinx.addnodes.desc):
-        return get_descname(node)
-    raise TypeError(f"Unrecognized node type '{node.__class__}'")
-
-
 def get_descname(desc):
     try:
         sig = desc[0]

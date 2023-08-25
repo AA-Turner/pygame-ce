@@ -1,17 +1,16 @@
 """Add the generic fixed and derived content to a Classic Pygame document"""
 
-from ext.utils import Visitor, get_name, GetError, get_refid, as_refid, as_refuri
-from ext.indexer import get_descinfo, get_descinfo_refid
+import os
+import re
+from collections import deque
 
-from sphinx.addnodes import desc, desc_content, desc_classname, desc_name, desc_signature
+from sphinx.addnodes import desc, desc_content, desc_signature
 from sphinx.addnodes import index as section_prelude_end_class
 from sphinx.domains.python import PyClasslike
 
 from docutils.nodes import (
-    section,
     literal,
     reference,
-    paragraph,
     title,
     document,
     Text,
@@ -27,9 +26,9 @@ from docutils.nodes import (
     SkipNode,
     line,
 )
-import os
-import re
-from collections import deque
+
+from ext.utils import Visitor, get_name, GetError, get_refid, as_refid, as_refuri
+from ext.indexer import get_descinfo_refid
 
 
 class PyGameClasslike(PyClasslike):

@@ -1,7 +1,8 @@
-import docutils.nodes
-from ext.indexer import tour_descinfo
-
 import os
+
+import docutils.nodes
+
+from ext.indexer import tour_descinfo
 
 
 def setup(app):

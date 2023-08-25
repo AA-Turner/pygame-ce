@@ -29,11 +29,13 @@ pyg_descinfo_tbl: {<id>: {'fullname': <fullname>,
 
 """
 
-from ext.utils import Visitor, get_fullname, get_refid, as_refid, GetError
-
+import os.path
 from collections import deque
 
-import os.path
+import docutils.nodes
+import sphinx.addnodes
+
+from ext.utils import Visitor, get_refid, GetError
 
 MODULE_ID_PREFIX = "module-"
 
@@ -227,3 +229,13 @@ def get_descinfo_refid(refid, env):
         return env.pyg_descinfo_tbl[refid]
     except KeyError:
         raise GetError("Not found")
+
+
+def get_fullname(node):
+    if isinstance(node, docutils.nodes.section):
+        return get_sectionname(node)
+    if isinstance(node, sphinx.addnodes.desc):
+        return get_descname(node)
+    raise TypeError(f"Unrecognized node type '{node.__class__}'")
+
+
