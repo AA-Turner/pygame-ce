@@ -7,7 +7,6 @@ extensions = [
     'ext.headers',
     'ext.boilerplate',
 ]
-templates_path = ['_templates']
 project = 'pygame-ce'
 copyright = '2000-2022, pygame developers, 2023 pygame-ce developers'
 version = release = '2.4.0'
